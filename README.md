@@ -3,7 +3,7 @@
 
 [![Follow](https://img.shields.io/github/followers/IdlanZafran?label=Follow%20Me&style=social)](https://github.com/IdlanZafran)
 
-[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/IdlanZafran/RapidBootWiFi)
+[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/IdlanZafran/esp32-smart-energy-monitor-relay)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 _If you like this project, don’t forget to:_
