@@ -1,15 +1,14 @@
 # ESP32 Smart Energy Monitor & Relay Switch
-**By Idlan Zafran Mohd Zaidie**
-🔗 https://github.com/IdlanZafran
+**By [Idlan Zafran Mohd Zaidie](https://github.com/IdlanZafran)**
 
 [![Follow](https://img.shields.io/github/followers/IdlanZafran?label=Follow%20Me&style=social)](https://github.com/IdlanZafran)
 
 [![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/IdlanZafran/RapidBootWiFi)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-⭐ If you like this project, don’t forget to:
-- ⭐ Star this repository  
-- 👤 Follow my GitHub for future updates
+_If you like this project, don’t forget to:_
+- _⭐ Star this repository_
+- _👤 Follow my GitHub for future updates_
 
 ## 📌 Overview
 
