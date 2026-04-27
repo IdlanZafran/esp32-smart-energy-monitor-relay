@@ -7,7 +7,6 @@
 #include <WiFiManager.h>
 #include <LittleFS.h>
 #include <time.h> 
-#include "localweb.h"
 
 // --- Web Server on port 80 ---
 WebServer server(80);
@@ -234,8 +233,15 @@ void setup() {
   previousWiFiMillis = millis();
   configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
 
-  server.on("/", []() { server.send(200, "text/html", index_html); });
-  
+  server.on("/", []() {
+    File file = LittleFS.open("/index.html", "r");
+    if (!file) {
+      server.send(500, "text/plain", "Failed to open file");
+      return;
+    }
+    server.streamFile(file, "text/html");
+    file.close();
+  });  
   // JSON Endpoint updated for mA
   server.on("/data", []() {
     String json = "{\"voltage\":\"" + String(voltageRMS, 1) + 
