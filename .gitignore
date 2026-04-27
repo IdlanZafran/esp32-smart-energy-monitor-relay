@@ -1,0 +1,18 @@
+# --- PlatformIO Specific ---
+.pio
+.pioenvs
+.piolibdeps
+
+# --- VS Code Specific ---
+.vscode/*
+!.vscode/extensions.json
+
+# --- Temporary/Build files ---
+*.gcc
+*.gdb
+*.tar.gz
+*.tmp
+
+# --- OS Specific ---
+.DS_Store
+Thumbs.db

@@ -1,0 +1,271 @@
+#ifndef LOCALWEB_H
+#define LOCALWEB_H
+
+const char index_html[] PROGMEM = R"rawliteral(
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Energy Dashboard</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&display=swap');
+
+    :root {
+      --bg-color: #F4F7FB;
+      --sidebar-bg: #E2EAFA;
+      --card-bg: #FFFFFF;
+      --text-dark: #4A5568;
+      --text-blue: #5A8DEF;
+      --text-purple: #C87DE0;
+      --text-teal: #75B0A2;
+      --box-blue: linear-gradient(135deg, #6B95FF, #4D76E5);
+      --box-purple: linear-gradient(135deg, #D988E8, #BA61D0);
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Nunito', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-dark);
+      display: flex;
+      height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 80px;
+      background-color: var(--sidebar-bg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 0;
+      border-right: 2px solid #D1DEF3;
+    }
+    .logo { font-weight: 800; color: var(--text-blue); font-size: 1.2rem; margin-bottom: 40px; }
+    .icon { font-size: 1.8rem; margin: 15px 0; cursor: pointer; filter: grayscale(100%) opacity(0.5); transition: 0.3s; }
+    .icon.active { filter: none; background: #6B95FF; padding: 10px; border-radius: 50%; color: white; box-shadow: 0 4px 10px rgba(107, 149, 255, 0.4); }
+
+    /* Main Content Area */
+    .main {
+      flex: 1;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      overflow-y: auto;
+    }
+
+    /* Header */
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .greeting h1 { color: var(--text-blue); margin: 0; font-size: 2rem; }
+    .date-badges { display: flex; gap: 5px; }
+    .badge { background: var(--text-purple); color: white; padding: 8px 12px; border-radius: 8px; font-weight: bold; font-size: 1.2rem; }
+
+    /* Layout Grid */
+    .content-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 20px;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+    }
+
+    /* Hero Card (Relay Control) */
+    .hero-card { text-align: center; padding: 40px 20px; }
+    .hero-card h2 { color: var(--text-dark); margin-top: 0; font-size: 1.8rem; }
+    
+    .relay-btn {
+      background: #E2EAFA;
+      color: var(--text-blue);
+      border: none;
+      padding: 15px 40px;
+      font-size: 1.5rem;
+      font-weight: 800;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .relay-btn.on { background: var(--text-blue); color: white; box-shadow: 0 8px 20px rgba(90, 141, 239, 0.4); }
+    .relay-btn:active { transform: scale(0.95); }
+    .relay-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+
+    /* Metrics Grid */
+    .metrics-title { color: var(--text-blue); font-weight: 800; font-size: 1.3rem; margin: 20px 0 10px 0; }
+    .metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+    .metric-box {
+      border-radius: 15px;
+      padding: 20px;
+      color: white;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    }
+    .metric-box.blue { background: var(--box-blue); }
+    .metric-box.purple { background: var(--box-purple); }
+    .metric-box .label { font-weight: 700; font-size: 1.1rem; margin-bottom: 10px; }
+    .metric-box .icon-large { font-size: 2.5rem; margin-bottom: 10px; }
+    .metric-box .val { font-size: 1.4rem; font-weight: 800; }
+
+    /* Right Sidebar Cards */
+    .side-title { color: #8A98B0; font-weight: 700; font-size: 1.1rem; margin-bottom: 5px;}
+    .estimate { color: var(--text-teal); font-size: 3.5rem; font-weight: 800; margin: 0; text-align: center;}
+    .sub-text { font-size: 0.8rem; color: #A0ABC0; text-align: center; margin-top: -10px; display: block;}
+    .max-bill { color: #3A629B; font-size: 3.5rem; font-weight: 800; text-align: center; margin: 0;}
+
+    /* Mobile Responsive */
+    @media (max-width: 900px) {
+      .content-grid { grid-template-columns: 1fr; }
+      .metrics { grid-template-columns: 1fr; }
+      .sidebar { display: none; } 
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="sidebar">
+    <div class="logo">⚡</div>
+    <div class="icon active">🏠</div>
+    <div class="icon">📊</div>
+    <div class="icon">🌐</div>
+    <div class="icon">⚙️</div>
+    <div style="flex-grow: 1;"></div>
+    <div class="icon" style="font-size: 1rem;">Log out</div>
+  </nav>
+
+  <main class="main">
+    
+    <header class="header">
+      <div class="greeting">
+        <h1>Welcome, User!</h1>
+      </div>
+      <div class="date-badges" id="dateDisplay">
+        </div>
+    </header>
+
+    <div class="content-grid">
+      
+      <div class="left-col">
+        <div class="card hero-card">
+          <h2>SYSTEM STATUS</h2>
+          <p style="color: #8A98B0; margin-bottom: 30px;">Tap to toggle the main power relay</p>
+          <button id="relayBtn" class="relay-btn" onclick="toggleRelay()">Connecting...</button>
+        </div>
+
+        <div class="metrics-title">Live Sensor Data</div>
+        
+        <div class="metrics">
+          <div class="metric-box blue">
+            <div class="label">Voltage</div>
+            <div class="icon-large">🔌</div>
+            <div class="val" id="volts">-- V</div>
+          </div>
+          <div class="metric-box purple">
+            <div class="label">Current</div>
+            <div class="icon-large">🌊</div>
+            <div class="val" id="amps">-- mA</div> 
+          </div>
+          <div class="metric-box blue">
+            <div class="label">Power</div>
+            <div class="icon-large">⚡</div>
+            <div class="val" id="power">-- W</div> 
+          </div>
+        </div>
+      </div>
+
+      <div class="right-col">
+        
+        <div class="card" style="margin-bottom: 20px;">
+          <div class="side-title">Bill Estimator</div>
+          <div class="sub-text" style="margin-bottom: 10px;">approx / month</div>
+          <h2 class="estimate">RM <span id="billEst">0.00</span></h2>
+          <span class="sub-text">Based on current load</span>
+        </div>
+
+        <div class="card">
+          <div class="side-title">Max Bill Set for This Month</div>
+          <h2 class="max-bill">RM 80</h2>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    const dateObj = new Date();
+    const day = dateObj.getDate().toString().padStart(2, '0');
+    const month = dateObj.toLocaleString('default', { month: 'short' }).toUpperCase();
+    const year = dateObj.getFullYear().toString().slice(-2);
+    
+    document.getElementById('dateDisplay').innerHTML = `
+      <div class="badge">${day}</div>
+      <div class="badge">${month}</div>
+      <div class="badge">${year}</div>
+    `;
+
+    setInterval(function() {
+      fetch('/data')
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById('volts').innerText = data.voltage + ' V';
+          document.getElementById('amps').innerText = data.current + ' mA'; // Now in mA
+          document.getElementById('power').innerText = data.power + ' W'; 
+          
+          const pwrW = parseFloat(data.power);
+          const estimatedCost = (pwrW / 1000) * 24 * 30 * 0.218;
+          document.getElementById('billEst').innerText = estimatedCost.toFixed(2);
+
+          const btn = document.getElementById('relayBtn');
+          if (!btn.disabled) {
+            if(data.relay) {
+              btn.innerText = "POWER IS ON";
+              btn.className = "relay-btn on";
+            } else {
+              btn.innerText = "POWER IS OFF";
+              btn.className = "relay-btn";
+            }
+          }
+        })
+        .catch(err => console.log("Fetch error: ", err));
+    }, 2000);
+
+    function toggleRelay() {
+      const btn = document.getElementById('relayBtn');
+      btn.disabled = true; 
+      
+      if (btn.classList.contains('on')) {
+          btn.className = "relay-btn";
+          btn.innerText = "POWER IS OFF";
+      } else {
+          btn.className = "relay-btn on";
+          btn.innerText = "POWER IS ON";
+      }
+
+      fetch('/toggle')
+        .then(() => {
+          setTimeout(() => { btn.disabled = false; }, 600); 
+        })
+        .catch(err => {
+          console.log("Toggle failed", err);
+          btn.disabled = false;
+        });
+    }
+  </script>
+</body>
+</html>
+)rawliteral";
+
+
+#endif
